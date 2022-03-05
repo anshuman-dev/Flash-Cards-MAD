@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Results
+        </title>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="../static/results.css">
+    </head>
+    <body>
+        <header style="margin: 0;">
+            <nav class ="navbar">
+                <ul class="nav_ul">
+                    <li class="nav_item"><a class="nav_item_a" href="/dashboard">Home</a></li>
+                    <li class="nav_item"><a class="nav_item_a" href="/decks">Decks</a></li>
+                    <li class="nav_item"><a class="nav_item_a" href="/quiz_loader">Quiz</a></li>
+                    <li class = "nav_item_logout"><button class="logout_button" onclick="window.location.href='/logout'" type="submit">Logout</button></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class = "dashboard_content">
+        <h2 style="margin-left: 10px;margin-bottom: 0px;" >Results</h2>
+        <hr>
+        <div style="text-align: center;">
+        <h3 style="color: {{ color }}; ">{{ message }} !</h3>
+        <h4>You scored {{ points }}%</h4>
+        </div>
+        <h2 style="margin-left: 10px;margin-bottom: 0px;" >Rcommended reviews</h2>
+        <hr>
+        <div class="contents">
+        <h3 style="text-align: center;">{{ status }}</h3>
+        <div class ="cards_display">
+            {% for card in cards %}
+                <div class="card">
+                    <div class="container">
+                    <h4 style="font-size: 25px;max-width: 150px;margin-left: auto;margin-right: auto;"><b>{{ card[1] }}</b></h4>
+                    <p>{{ card[2] }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+            <h4 style="color: green;">{{ perfect }}</h4>
+            <h4>Please rate this deck</h4>
+            <form action="/ratingapi/update" method="post">
+                <input type="hidden" value = {{deck_id}} name = "deck_id">
+                <input style = "width: 20px;height: 20px;" type="radio" name="option" value="0" required><label>Easy</label>
+                <input style = "width: 20px;height: 20px;" type="radio" name="option" value="1" required><label>Medium</label>
+                <input style = "width: 20px;height: 20px;" type="radio" name="option" value="2"required><label>Hard</label>
+                <br>
+                <br>
+                <input class="entry1"type="submit" value="Submit">
+            </form>
+            <br>
+            <button class = "entry2"onclick="window.location.href='/dashboard'">Skip</button>
+        </div>
+        </div>
+        </div>
+        
+        
+    </body>
+</html>
