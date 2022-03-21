@@ -13,12 +13,12 @@
     padding: 0px;
     font-size: 20px;
     text-align:center;
-    color:#f0f3f6;
+    color:#000000;
     text-decoration:none
 }
 .nav_item:hover{
     color: #ffffff;
-    background-color: #41d6c3;
+    background-color: #dba660;
 }
 
 .nav_item_logout{
@@ -47,7 +47,7 @@
     margin: 0px;
     padding:0px;
     margin: 0px;
-    background: #5596e6;
+    background: linear-gradient(100deg,#dfffb5,#fcf403);
 }
 
 .nav_ul{
