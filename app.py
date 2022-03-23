@@ -1,11 +1,14 @@
-
+#The libraries import
 from flask import Flask, session,render_template,request,redirect,g,url_for
 from flask_restful import Api
 import os
+
+#My functions call
 from api.api import CardAddAPI, CardDelAPI,DeckAddAPI,DeckUpdateAPI,DeckDelAPI, QuizApi, RatingApi
 from application.configuration import appConfig
 from controllers.functions import add_user,gen_hist_img, get_decks,get_card, get_performance, get_rating, get_score_breakdown, get_user_id, option_gen, reset_result, user_exists,authenticate_user,get_cards,get_deck,get_result
 from db.database import db
+#Consider this one again
 import matplotlib
 matplotlib.use('Agg')
 
@@ -14,11 +17,11 @@ matplotlib.use('Agg')
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(appConfig)
+    app.config.from_object(appConfig) #app.config is a dictionary now
     db.init_app(app)
     api = Api(app)
     app.app_context().push()
-    app.secret_key = os.urandom(24)
+    app.secret_key = os.urandom(24) #cyrptographic 24
     return app, api
     
 app,api = create_app()
@@ -28,11 +31,11 @@ app,api = create_app()
 @app.route('/')
 def login():
     try:
-        print(g.user)
+        print(g.user) #Store context of user
         if request.method == 'GET':
             if g.user:
                 return redirect(url_for('dashboard'))
-        session.clear()
+        session.clear()#If no context of user is found
         return render_template("login.html")
     except:
         return render_template("error.html")
@@ -43,11 +46,11 @@ def login():
 def signin():
     print(g.user)
     status = "" 
-    if g.user:
-        return redirect(url_for('dashboard'))
-    try:
+    if g.user: #If user already exits in session, then don't ask for login
+        return redirect(url_for('dashboard')) 
+    try: #nothing in session. hence ask for login
         if request.method == 'POST':
-            session.pop('user',None)
+            session.pop('user',None) #none as default value otherwise KeyError.
             if authenticate_user(request.form['username'],request.form['password']):
                 session['user'] = request.form['username']
                 return redirect(url_for('dashboard'))
@@ -263,7 +266,7 @@ def delete_deck1():
             return render_template("error.html")
     return redirect(url_for('signin'))
 
-
+#Format is: add_resource (resource, *urls, **kwargs)
 api.add_resource(CardAddAPI,"/cardapi/add")
 api.add_resource(CardDelAPI,"/cardapi/delete")
 api.add_resource(DeckAddAPI,"/deckapi/add")

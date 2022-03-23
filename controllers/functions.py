@@ -10,9 +10,9 @@ from io import BytesIO
 
 # USER FUNCTIONS BEGIN
 def sha3512(password):
-    m = hashlib.sha3_512()
-    m.update(password.encode("utf-8"))
-    return str(m.hexdigest())
+    temp = hashlib.sha3_512()
+    temp.update(password.encode("utf-8"))
+    return str(temp.hexdigest())
 
 
 def add_user(username,password):
