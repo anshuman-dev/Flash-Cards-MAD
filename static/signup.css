@@ -15,6 +15,10 @@ body {
    
 }
 
+H1{
+    font-size: 5em;
+  }
+
 .entry{
     
     margin-top: 10px;

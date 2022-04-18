@@ -34,6 +34,7 @@ class Performance(db.Model):
     card_id = Column(db.Integer, db.ForeignKey("cards.card_id"),nullable=False)
     deck_id = Column(db.Integer, db.ForeignKey("decks.deck_id"),nullable=False)
     score = Column(db.Integer,nullable=False)
+
 class Result(db.Model):
     __tablename__ = "results"
     result_id = Column(db.Integer,primary_key=True,autoincrement=True)
