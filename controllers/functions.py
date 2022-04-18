@@ -10,9 +10,9 @@ from io import BytesIO
 
 # USER FUNCTIONS BEGIN
 def sha3512(password):
-    temp = hashlib.sha3_512()
-    temp.update(password.encode("utf-8"))
-    return str(temp.hexdigest())
+    temp = hashlib.sha3_512()#Normal string into byte format
+    temp.update(password.encode("utf-8"))#encode 
+    return str(temp.hexdigest())#string object of double length containing only hexadecimal digits
 
 
 def add_user(username,password):
@@ -54,6 +54,7 @@ def add_card(question,answer,deck_id):
     db.session.add(new_card)
     db.session.commit()
 
+#If deleting a card, delete its performance as well.
 def delete_card(card_id):
     delete_performance_by_card(card_id)
     db.session.query(Card).filter(Card.card_id==card_id).delete()
@@ -191,7 +192,7 @@ def get_misc(user_id,deck_id):
 
 # RATING FUNCTIONS BEGIN
 def update_rating(deck_id,rating):
-    print("Reached here inside rating")
+    #print("Reached here inside rating")
     new_rating = Rating(deck_id=deck_id,rating=rating)
     db.session.add(new_rating)
     db.session.commit()
@@ -239,6 +240,7 @@ def get_score_breakdown(user_id,deck_id):
         scores.append(s)
     return scores
 
+#Wrong options. Check this functionality. Why more options?
 def option_gen(cards):
     data = []
     with open('data/wordlist.txt') as f:

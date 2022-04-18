@@ -4,23 +4,31 @@ from flask_restful import Api
 import os
 
 #My functions call
+#APIS
 from api.api import CardAddAPI, CardDelAPI,DeckAddAPI,DeckUpdateAPI,DeckDelAPI, QuizApi, RatingApi
+
+#Database URI - connection to the database
 from application.configuration import appConfig
+
+#Various functions for the whole application
 from controllers.functions import add_user,gen_hist_img, get_decks,get_card, get_performance, get_rating, get_score_breakdown, get_user_id, option_gen, reset_result, user_exists,authenticate_user,get_cards,get_deck,get_result
+
+#database configurations
 from db.database import db
+
 #Consider this one again
 import matplotlib
 matplotlib.use('Agg')
 
 
 
-
+#Extracting all the configurations.
 def create_app():
     app = Flask(__name__)
     app.config.from_object(appConfig) #app.config is a dictionary now
     db.init_app(app)
     api = Api(app)
-    app.app_context().push()
+    app.app_context().push() #make application context globally available
     app.secret_key = os.urandom(24) #cyrptographic 24
     return app, api
     
@@ -31,7 +39,7 @@ app,api = create_app()
 @app.route('/')
 def login():
     try:
-        print(g.user) #Store context of user
+        #print(g.user) #Store context of user
         if request.method == 'GET':
             if g.user:
                 return redirect(url_for('dashboard'))
@@ -44,7 +52,7 @@ def login():
 
 @app.route('/signin',methods=['GET','POST'])
 def signin():
-    print(g.user)
+    #print(g.user)
     status = "" 
     if g.user: #If user already exits in session, then don't ask for login
         return redirect(url_for('dashboard')) 
@@ -58,6 +66,7 @@ def signin():
                 status = "Incorrect username or login"
     except:
         return render_template("error.html")
+    #Safely show incorrect message. Working now.
     return render_template("signin.html",message=status)
 
 @app.route('/cheemserror')
@@ -71,7 +80,8 @@ def signup():
         return redirect(url_for('dashboard'))
     try:
         if request.method == 'POST':
-            session.pop('user',None)
+            session.pop('user',None)#If key exists remove and then return the value otherwise KeyError. 
+            #none default value to keep the Keyerror from raised.
             username = request.form['username']
             password = request.form['password']
             if not user_exists(username):
@@ -88,7 +98,7 @@ def signup():
 @app.route('/dashboard',methods = ['GET','POST'])
 def dashboard():
     try:
-        reset_result()
+        reset_result() #remove any old queries
     except:
         return render_template("error.html")
     if g.user:
@@ -114,27 +124,27 @@ def dashboard():
 
 
 
-
+#After the user completes the quiz
 @app.route('/results',methods = ['GET','POST'])
 def results():
     global visited
     visited = []
     if g.user:
         try:
-            deck_id=request.args.get('deck_id')
+            deck_id=request.args.get('deck_id')#multidict to get value for key passed.
             points,wrong_cards = get_result(get_user_id(session["user"]))
             if int(points) >= 100:
-                message = "Excellent"
+                message = "You have an excellent understanding of the topic!"
                 color = "#008000"
             elif int(points) >=70:
-                message = "Good"
+                message = "Good job! Try better performance next time"
                 color = "#f8bb00"
             elif int(points) >= 40:
                 color = "#808080"
-                message = "Passed"
+                message = "Pass. Need more practice!"
             else:
                 color = '#ff0000'
-                message = "Try again"
+                message = "Failed. Please pay more attention."
         
             if points !=None and wrong_cards != None:
                 cards = [get_card(x) for x in wrong_cards]
@@ -186,6 +196,7 @@ def quiz_loader():
         except:
             return render_template("error.html")
     return redirect(url_for('signin'))
+
 #global data
 visited = []
 data = None
@@ -266,6 +277,8 @@ def delete_deck1():
             return render_template("error.html")
     return redirect(url_for('signin'))
 
+#Don't forget to add routes to APIS
+#Use api.add_resource registers the routes with the framework using the given endpoint.
 #Format is: add_resource (resource, *urls, **kwargs)
 api.add_resource(CardAddAPI,"/cardapi/add")
 api.add_resource(CardDelAPI,"/cardapi/delete")
@@ -275,11 +288,13 @@ api.add_resource(DeckDelAPI,"/deckapi/delete")
 api.add_resource(QuizApi,"/quizapi/next")
 api.add_resource(RatingApi,"/ratingapi/update")
 
+# Run before everything
 @app.before_request
 def before_request():
     g.user = None
     if 'user' in session:
         g.user = session['user']
 
+#host -> localhost
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
