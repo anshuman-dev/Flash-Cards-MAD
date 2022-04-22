@@ -10,7 +10,7 @@ At the end of the quiz you can see your performance on how well you did in the Q
 Any contributions to enhance the functionality of this app are welcome.
 
 ## Pre-Installed Requirements
- Following libraries/packages need to be installed before working on the web locally.
+ Following libraries/packages need to be installed before working on the application locally.
  - Python3 and above.
  - Flask
  - SQLAlchemy
@@ -32,12 +32,12 @@ Then, on the created decks, user can take Quizzes and then receive a feedback on
 
 
 ## HOW TO RUN?
-To run the application through command line:
+To run the application through command line(will install dependencies as well):<br>
 -> cd final-project<br>
 -> chmod 777 start.sh<br>
 -> ./start.sh<br>
 
-To run the application directly on browser:
+To run the application directly on browser:<br>
 -> Click on app.py file.<br>
 -> Check the IP address shown on the dialog box shown after clicking app.py file.<br>
 -> Visit that IP address on your browser.(Keep check of port number, it should be :5000)<br>
